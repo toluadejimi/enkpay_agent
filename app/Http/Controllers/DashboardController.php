@@ -8,7 +8,8 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\Wallet;
+use App\Models\Emoney;
+
 
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Hash;
@@ -39,8 +40,8 @@ class DashboardController extends Controller
 
         ->get()->sum('amount');
 
-        $user_balance = Wallet::where('user_id', Auth::id())
-        ->first()->amount;
+        $user_balance = Emoney::where('user_id', Auth::id())
+        ->first()->current_balance ;
 
 
        // Transaction::orderBy('id','DESC')->take(10)->get();
