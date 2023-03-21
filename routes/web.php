@@ -54,6 +54,14 @@ Route::get('/config-cache', function() {
 });
 
 
+Route::group([
+    'as' => 'passport.',
+    'prefix' => config('passport.path', 'oauth'),
+    'namespace' => 'Laravel\Passport\Http\Controllers',
+], function () {
+    // Passport routes...
+});
+
 
 
 Route::post('sign-in', [AuthenticatedSessionController::class,'signin']);
@@ -63,6 +71,8 @@ Route::post('sign-in', [AuthenticatedSessionController::class,'signin']);
 Route::get('/', function () {
     return view('welcome');
 });
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -102,7 +112,7 @@ Route::group(['middleware' => ['auth']], function()
 
 
 
-    
+
 
 
 });

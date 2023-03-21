@@ -20,6 +20,11 @@ class Reference
         return self::reference('RQ');
     }
 
+    public static function customerRef(): string
+    {
+        return self::reference('CUSTOMER');
+    }
+
     public static function transactionRef(): string
     {
         return self::reference('TR');
@@ -42,6 +47,8 @@ class Reference
 
     protected static function reference(string $alpha = 'ENKPAY'): string
     {
-        return "{$alpha}|" . Carbon::now()->format('YmdHms') . '|' . mt_rand(10, 99) . substr(time(), 6);
+        //return "ENKPAY|" . Carbon::now()->format('YmdHms') . '|' . mt_rand(100000000000, 9900000000000) . substr(time(), 100);
+        return "ENKPAY".mt_rand(100000000000, 9900000000000) . substr(time(), 100);
+
     }
 }

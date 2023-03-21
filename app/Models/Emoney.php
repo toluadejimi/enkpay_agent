@@ -11,12 +11,6 @@ class EMoney extends Model
 
 
     protected $fillable = [
-        'id',
-        'trx_id',
-        'type',
-        'amount',
-        'status',
-        'user_id',
-        'narration',
+        
     ];
 }
