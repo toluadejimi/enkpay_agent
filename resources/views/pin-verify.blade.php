@@ -1,112 +1,65 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
+
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Enkpay Agent </title>
-    <!-- plugins:css -->
-    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- Layout styles -->
-    <link rel="stylesheet" href="../../assets/css/style.css">
-    <!-- End layout styles -->
-    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
-  </head>
-  <body>
-    <div class="container-scroller">
-      <div class="container-fluid page-body-wrapper full-page-wrapper">
-        <div class="content-wrapper d-flex align-items-center auth">
-          <div class="row flex-grow">
-            <div class="col-lg-4 mx-auto">
-              <div class="auth-form-light text-left p-5">
-                <div class="brand-logo">
-                  <img src="../../assets/images/logo.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="{{url('')}}/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body style="background: #18003d;height: 80;">
+
+
+    <div class="container">
+        <section class="login-clean"
+            style="color: var(--bs-gray-100);background: rgba(241,247,252,0);text-align: center;"><img
+                class="bounce animated" src="assets/img/clipboard-image.png"
+                style="height: 84px;margin-bottom: 49px;margin-top: -32px;">
+
+
+            <form method="post" action="verify-now"
+                style="margin-bottom: 12px;box-shadow: 1px 4px 12px rgba(0,0,0,0.19);border-radius: 10px;">
+                @csrf
+                <h5 class="visually-hidden">Pin Verification</h5>
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-                
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-                                @if (session()->has('message'))
-                                    <div class="alert alert-success">
-                                        {{ session()->get('message') }}
-                                    </div>
-                                @endif
-                                @if (session()->has('error'))
-                                    <div class="alert alert-danger">
-                                        {{ session()->get('error') }}
-                                    </div>
-                                @endif
-      
+                @endif
+                @if (session()->has('message'))
+                <div class="alert alert-success">
+                    {{ session()->get('message') }}
+                </div>
+                @endif
+                @if (session()->has('error'))
+                <div class="alert alert-danger">
+                    {{ session()->get('error') }}
+                </div>
+                @endif
+                <h1
+                    style="background: rgba(255,255,255,0);border-width: 88px;height: 44px;width: 248px;font-size: 19px;color: #0b0032;margin-bottom: 19px;margin-top: 13px;">
+                    PIN VERIFICATION</h1>
+                <div class="illustration"></div>
+                <div class="mb-3"><input class="form-control" type="password" name="user_pin" required
+                        placeholder="Enter Agent Pin" style="height: 42px;"></div>
+                <div class="mb-3"><button class="btn btn-primary d-block w-100" data-bss-hover-animate="pulse"
+                        type="submit" style="background: #0f0141;padding: 13px;margin-top: 46px;">Continue</button></div>
+                <a class="forgot" href="forgot-password.html">Forgot your pin?</a>
 
-                <h4>PIN Verification</h4>
-                <h6 class="font-weight-light">Verify your pin to continue</h6>
-                <form method="POST" action="/pin-verify-now" class="pt-3">
-                    @csrf
-
-                  <div class="form-group">
-                    <input type="password" value="__('Password')" class="form-control form-control-lg" id="pin" required autocomplete="pin" name ="pin" placeholder="Enter Your Password">
-                  </div>
-
-                <div class="mt-3">
-                  <x-primary-button a class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn"></a>
-                    {{ __('Continue') }}
-                   </x-primary-button>
-                 
-                  </div>
-
-
-                  <div class="my-2 d-flex justify-content-between align-items-center">
-                    
-
-
-                    <a href="/pin-request" class="auth-link text-black">Forgot pin?</a>
-                  </div>
-
-
-            
-
-
-
-                  <!-- <div class="text-center mt-4 font-weight-light"> Don't have an account? <a href="{{ route('register') }}" class="text-primary">Create</a> -->
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- content-wrapper ends -->
-      </div>
-      <!-- page-body-wrapper ends -->
+            </form><small style="margin-top: 8px;text-align: right;"><br><strong>© 2023 Enkwave Dynamic
+                    Technologies</strong><br></small>
+        </section>
     </div>
-    <!-- container-scroller -->
-    <!-- plugins:js -->
-    <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page -->
-    <!-- End plugin js for this page -->
-    <!-- inject:js -->
-    <script src="../../assets/js/off-canvas.js"></script>
-    <script src="../../assets/js/hoverable-collapse.js"></script>
-    <script src="../../assets/js/misc.js"></script>
-    <!-- endinject -->
-  </body>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+</body>
+
 </html>
-
-
-
-
-

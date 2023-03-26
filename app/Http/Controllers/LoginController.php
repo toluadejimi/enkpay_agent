@@ -38,65 +38,59 @@ public function login(Request $request){
 
         $credentials = request(['phone', 'password']);
 
-        Passport::tokensExpireIn(Carbon::now()->addMinutes(15));
-        Passport::refreshTokensExpireIn(Carbon::now()->addMinutes(15));
-
         if (!auth()->attempt($credentials)) {
-            return response()->json([
-                'status' => $this->failedStatus,
-                'message' => 'Phone No or Password Incorrect'
-            ], 500);
+            return back()->with('error', "Phone or Password is incorrect");
+
         }
 
 
-        $token = auth()->user()->createToken('API Token')->accessToken;
-
-        $user = User::select(
-        'id',
-        'first_name',
-        'last_name',
-        'phone',
-        'email',
-        'image',
-        'type',
-        'is_phone_verified',
-        'is_email_verified',
-        'gender',
-        'device_id',
-        'fcm_token',
-        'identification_type',
-        'identification_number',
-        'identification_image',
-        'is_kyc_verified',
-        'street',
-        'city',
-        'state',
-        'lga',
-        'bank_name',
-        'account_number',
-        'account_name',
-        'main_wallet',
-        'bonus_wallet',
-        'virtual_account',
-        'sms_code',
-        'status',
-        'dob')
-
-        ->where('id', Auth::id())->get();
+        return redirect('verify');
 
 
-        return response()->json([
-            'status' => $this->success,
-            'data' => $user,
-            'token' => $token
 
-        ],200);
 
 } catch (\Exception $th) {
     return $th->getMessage();
 }
 
 }
+
+
+public function verify_page(request $request){
+
+    return view('pin-verify');
+
+}
+
+
+
+public function pin_verify(request $request){
+
+
+    $user_pin = $request->user_pin;
+
+
+    $get_pin = User::where('id', Auth::id())
+    ->first()->pin;
+
+    if (Hash::check($user_pin, $get_pin) == false) {
+
+        return back()->with('error', "Invalid Pin, please try again later");
+
+    }
+
+
+    return redirect('agent-dashboard');
+
+
+
+
+}
+
+
+
+
+
 
 public function user_info(request $request){
 

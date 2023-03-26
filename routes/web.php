@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\LoginController;
+
+
 
 
 /*
@@ -64,7 +67,12 @@ Route::group([
 
 
 
-Route::post('sign-in', [AuthenticatedSessionController::class,'signin']);
+Route::post('sign-in', [LoginController::class,'login']);
+
+Route::get('verify', [LoginController::class,'verify_page']);
+
+Route::post('verify-now', [LoginController::class,'pin_verify']);
+
 
 
 
@@ -84,10 +92,9 @@ Route::get('/dashboard', function () {
 Route::group(['middleware' => ['auth']], function()
 
 {
-    Route::get('logout', [AuthenticatedSessionController::class,'logout']);
-    Route::get('pin-verify', [AuthenticatedSessionController::class,'pin_verify']);
-    Route::post('pin-verify-now', [AuthenticatedSessionController::class,'pin_verify_now']);
-    Route::post('pin-request', [AuthenticatedSessionController::class,'pin_request']);
+    Route::get('logout', [LoginController::class,'logout']);
+    Route::post('pin-verify-now', [LoginController::class,'pin_verify_now']);
+    Route::post('pin-request', [LoginController::class,'pin_request']);
 
 
 

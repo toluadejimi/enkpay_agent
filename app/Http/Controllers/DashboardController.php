@@ -9,7 +9,6 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Wallet;
-
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -21,13 +20,21 @@ class DashboardController extends Controller
 {
     public function agent_dashboard(Request $request){
 
-        $transaction = Transaction::where('user_id', Auth::id())
-        ->paginate(5);
+        $transaction = Transaction::latest()->where('user_id', Auth::id())
+        ->paginate(10);
 
         $all_sales= Transaction::where('user_id', Auth::id())
         ->get()->sum('amount');
 
-        $all_transactions = Transaction::all()->count();
+        $trasaction_count = Transaction::select("*")
+
+        ->whereBetween('created_at',
+
+                [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
+
+            )
+
+        ->get()->count();
 
         $weekly_total = Transaction::select("*")
 
@@ -37,13 +44,18 @@ class DashboardController extends Controller
 
             )
 
-        ->get()->sum('amount');
+        ->get()->sum('credit');
+
+
+
+
+
 
         $main_account = User::where('id', Auth::id())
         ->first()->main_wallet ;
 
         $bonus_account = User::where('id', Auth::id())
-        ->first()->main_wallet ;
+        ->first()->bonus_wallet ;
 
         $user_balance = $main_account + $bonus_account;
 
@@ -52,7 +64,7 @@ class DashboardController extends Controller
 
 
 
-        return view('/agent-dashboard', compact('transaction', 'weekly_total','all_transactions','all_sales','main_account', 'user_balance', 'bonus_account'));
+        return view('/agent-dashboard', compact('transaction', 'weekly_total','trasaction_count','all_sales','main_account', 'user_balance', 'bonus_account'));
     }
 
 

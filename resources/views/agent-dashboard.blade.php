@@ -33,7 +33,7 @@
                         </div>
 
                         <div class="col-md-4 stretch-card grid-margin">
-                            <div class="card bg-gradient-success card-img-holder text-white">
+                            <div class="card bg-gradient-dark card-img-holder text-white">
                             <div class="card-body">
                                 <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                                 <h4 class="font-weight-normal mb-3">Bonus Account <i class="mdi mdi-chart-line mdi-24px float-right"></i>
@@ -73,10 +73,10 @@
                             <div class="card bg-gradient-success card-img-holder text-white">
                             <div class="card-body">
                                 <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
-                                <h4 class="font-weight-normal mb-3">All Transactions <i class="mdi mdi-diamond mdi-24px float-right"></i>
+                                <h4 class="font-weight-normal mb-3"> Transactions Count <i class="mdi mdi-diamond mdi-24px float-right"></i>
                                 </h4>
-                                <h2 class="mb-5">{{$all_transactions}}</h2>
-                                <h6 class="card-text">Total Transactions</h6>
+                                <h2 class="mb-5">{{$trasaction_count}}</h2>
+                                <h6 class="card-text">Weekly Transaction Count</h6>
                             </div>
                             </div>
                         </div>
@@ -100,7 +100,9 @@
                                     <tr>
                                         <th> Transaction ID </th>
                                         <th> Type </th>
-                                        <th> Amount(NGN) </th>
+                                        <th> Credit(NGN) </th>
+                                        <th> Debit(NGN) </th>
+                                        <th> Balance(NGN) </th>
                                         <th> Status </th>
                                         <th> Narration </th>
                                         <th> Date </th>
@@ -111,9 +113,11 @@
                                     <tbody>
                                     @forelse ($transaction as $item)
                                         <tr>
-                                            <td>{{$item->trx_id}}</td>
-                                            <td>{{$item->type}}</td>
-                                            <td>{{number_format($item->amount, 2)}}</td>
+                                            <td>{{$item->ref_trans_id}}</td>
+                                            <td>{{$item->transaction_type}}</td>
+                                            <td>{{number_format($item->credit, 2)}}</td>
+                                            <td>{{number_format($item->debit, 2)}}</td>
+                                            <td>{{number_format($item->balance, 2)}}</td>
                                             @if($item->status == "0")
                                             <td><span class="badge rounded-pill bg-warning text-dark">Pending</span></td>
                                             @elseif($item->status == "1")
@@ -121,7 +125,7 @@
                                             @else
                                             <td><span class="badge rounded-pill bg-danger">Rejected</span></td>
                                             @endif
-                                            <td>{{$item->narration}}</td>
+                                            <td>{{$item->note}}</td>
                                             <td>{{date('F d, Y', strtotime($item->created_at))}}</td>
                                             <td>{{date('h:i:s A', strtotime($item->created_at))}}</td>
 
