@@ -111,13 +111,10 @@ public function user_info(request $request){
 }
 
 
-public function cash_out(Request $request){
-
-
-    dd('hello');
-
-
-}
+public function logout(Request $request) {
+    Auth::logout();
+    return redirect('/login');
+  }
 
 
 

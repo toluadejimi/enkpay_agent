@@ -13,6 +13,10 @@ use App\Http\Controllers\LoginController;
 
 Route::post('sign-in', [LoginController::class,'login']);
 
+
+Route::get('login', [AuthenticatedSessionController::class,'login']);
+
+
 Route::get('verify', [LoginController::class,'verify_page']);
 
 Route::post('verify-now', [LoginController::class,'pin_verify']);
@@ -32,11 +36,11 @@ Route::get('/', function () {
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
 
- require __DIR__.'/auth.php';
+//  require __DIR__.'/auth.php';
 
 
 Route::group(['middleware' => ['auth']], function()
