@@ -20,8 +20,12 @@ class DashboardController extends Controller
 {
     public function agent_dashboard(Request $request){
 
+
         $transaction = Transaction::latest()->where('user_id', Auth::id())
         ->paginate(10);
+
+
+
 
         $all_sales= Transaction::where('user_id', Auth::id())
         ->get()->sum('amount');
