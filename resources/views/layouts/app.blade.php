@@ -6,8 +6,8 @@
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
             <title>Enkpay Agent Dsshboard</title>
             <!-- plugins:css -->
-            <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
-            <link rel="stylesheet" href="assets/vendors/css/vendor.bundle.base.css">
+            <link rel="stylesheet" href="{{url('')}}/public/assets/vendors/mdi/css/materialdesignicons.min.css">
+            <link rel="stylesheet" href="{{url('')}}/public/assets/vendors/css/vendor.bundle.base.css">
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
             <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
             <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
@@ -33,9 +33,9 @@
             <!-- inject:css -->
             <!-- endinject -->
             <!-- Layout styles -->
-            <link rel="stylesheet" href="assets/css/style.css">
+            <link rel="stylesheet" href="{{url('')}}/public/assets/css/style.css">
             <!-- End layout styles -->
-            <link rel="shortcut icon" href="assets/images/favicon.ico" />
+            <link rel="shortcut icon" href="{{url('')}}/public/assets/images/favicon.ico" />
         </head>
         <body>
             <div class="container-scroller">
@@ -62,8 +62,8 @@
                 <!-- partial:partials/_navbar.html -->
                 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
                     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-                    <a class="navbar-brand brand-logo" href="/agent-dashboard"><img src="assets/images/logo.png" alt="logo" /></a>
-                    <a class="navbar-brand brand-logo-mini" href="/agent-dashboard"><img src="assets/images/logo-mini.png" alt="logo" /></a>
+                    <a class="navbar-brand brand-logo" href="/agent-dashboard"><img src="{{url('')}}/public/assets/images/logo.png" alt="logo" /></a>
+                    <a class="navbar-brand brand-logo-mini" href="/agent-dashboard"><img src="{{url('')}}/public/assets/images/logo-mini.png" alt="logo" /></a>
                     </div>
                     <div class="navbar-menu-wrapper d-flex align-items-stretch">
                     <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -78,7 +78,7 @@
                         <li class="nav-item nav-profile dropdown">
                         <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="nav-profile-img">
-                            <img src="assets/images/faces/face1.jpg" alt="image">
+                            <img src="{{url('')}}/public/assets/images/faces/face1.jpg" alt="image">
                             <span class="availability-status online"></span>
                             </div>
                             <div class="nav-profile-text">
@@ -93,14 +93,14 @@
                             <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
                         </div>
                         </li>
-                        
-                          
-                       
-                     
-                      
-                       
+
+
+
+
+
+
                     </ul>
-                    
+
                     </div>
                 </nav>
                 <!-- partial -->
@@ -111,7 +111,7 @@
                         <li class="nav-item nav-profile">
                         <a href="#" class="nav-link">
                             <div class="nav-profile-image">
-                            <img src="assets/images/faces/face1.jpg" alt="profile">
+                            <img src="{{url('')}}/public/assets/images/faces/face1.jpg" alt="profile">
                             <span class="login-status online"></span>
                             <!--change to offline or busy as needed-->
                             </div>
@@ -128,8 +128,8 @@
                             <i class="mdi mdi-home menu-icon"></i>
                         </a>
                         </li>
-                        
-                        
+
+
                         <li class="nav-item">
                         <a class="nav-link" href="/transaction">
                             <span class="menu-title">Transactions</span>
@@ -145,7 +145,7 @@
                         </li>
 
 
-                      
+
                         <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
                             <span class="menu-title">Account</span>
@@ -168,7 +168,7 @@
                             <div class="mt-4">
                             <div class="border-bottom">
                             </div>
-                           
+
                         </span>
                         </li>
                     </ul>
@@ -181,25 +181,25 @@
 
 
 
-                    
+
 
                 <!-- container-scroller -->
                 <!-- plugins:js -->
-                <script src="assets/vendors/js/vendor.bundle.base.js"></script>
+                <script src="{{url('')}}/public/assets/vendors/js/vendor.bundle.base.js"></script>
                 <!-- endinject -->
                 <!-- Plugin js for this page -->
-                <script src="assets/vendors/chart.js/Chart.min.js"></script>
-                <script src="assets/js/jquery.cookie.js" type="text/javascript"></script>
+                <script src="{{url('')}}/public/assets/vendors/chart.js/Chart.min.js"></script>
+                <script src="{{url('')}}/public/assets/js/jquery.cookie.js" type="text/javascript"></script>
                 <!-- End plugin js for this page -->
                 <!-- inject:js -->
-                <script src="assets/js/off-canvas.js"></script>
-                <script src="assets/js/hoverable-collapse.js"></script>
-                <script src="assets/js/misc.js"></script>
+                <script src="{{url('')}}/public/assets/js/off-canvas.js"></script>
+                <script src="{{url('')}}/public/assets/js/hoverable-collapse.js"></script>
+                <script src="{{url('')}}/public/assets/js/misc.js"></script>
                 <!-- endinject -->
                 <!-- Custom js for this page -->
-                <script src="assets/js/dashboard.js"></script>
-                <script src="assets/js/todolist.js"></script>
-                <script src="assets/js/custom.js"></script>
+                <script src="{{url('')}}/public/assets/js/dashboard.js"></script>
+                <script src="{{url('')}}/public/assets/js/todolist.js"></script>
+                <script src="{{url('')}}/public/assets/js/custom.js"></script>
 
                 <script src="{{ asset('js/app.js') }}"></script>
                 <script src="https://code.jquery.com/jquery-3.2.1.js"></script>

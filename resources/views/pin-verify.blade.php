@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Untitled</title>
-    <link rel="stylesheet" href="{{url('')}}/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{url('')}}/{{url('')}}/public/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-    <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="{{url('')}}/public/assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="{{url('')}}/public/assets/css/styles.css">
 </head>
 
 <body style="background: #18003d;height: 80;">
@@ -17,7 +17,7 @@
     <div class="container">
         <section class="login-clean"
             style="color: var(--bs-gray-100);background: rgba(241,247,252,0);text-align: center;"><img
-                class="bounce animated" src="assets/img/clipboard-image.png"
+                class="bounce animated" src="{{url('')}}/public/assets/img/clipboard-image.png"
                 style="height: 84px;margin-bottom: 49px;margin-top: -32px;">
 
 
@@ -58,8 +58,8 @@
                     Technologies</strong><br></small>
         </section>
     </div>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
+    <script src="{{url('')}}/public/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{url('')}}/public/assets/js/bs-init.js"></script>
 </body>
 
 </html>

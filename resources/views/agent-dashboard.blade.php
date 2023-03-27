@@ -23,7 +23,7 @@
                         <div class="col-md-4 stretch-card grid-margin">
                             <div class="card bg-gradient-success card-img-holder text-white">
                             <div class="card-body">
-                                <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                                <img src="{{url('')}}/public/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                                 <h4 class="font-weight-normal mb-3">Main Account <i class="mdi mdi-chart-line mdi-24px float-right"></i>
                                 </h4>
                                 <h2 class="mb-5">NGN {{number_format($main_account, 2)}}</h2>
@@ -35,7 +35,7 @@
                         <div class="col-md-4 stretch-card grid-margin">
                             <div class="card bg-gradient-dark card-img-holder text-white">
                             <div class="card-body">
-                                <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                                <img src="{{url('')}}/public/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                                 <h4 class="font-weight-normal mb-3">Bonus Account <i class="mdi mdi-chart-line mdi-24px float-right"></i>
                                 </h4>
                                 <h2 class="mb-5">NGN {{number_format($bonus_account, 2)}}</h2>
@@ -47,7 +47,7 @@
                         <div class="col-md-4 stretch-card grid-margin">
                             <div class="card bg-gradient-danger card-img-holder text-white">
                             <div class="card-body">
-                                <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                                <img src="{{url('')}}/public/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                                 <h4 class="font-weight-normal mb-3">Weekly Sales <i class="mdi mdi-chart-line mdi-24px float-right"></i>
                                 </h4>
                                 <h2 class="mb-5">NGN {{number_format($weekly_total), 2}}</h2>
@@ -60,7 +60,7 @@
                         <div class="col-md-4 stretch-card grid-margin">
                             <div class="card bg-gradient-info card-img-holder text-white">
                             <div class="card-body">
-                                <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                                <img src="{{url('')}}/public/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                                 <h4 class="font-weight-normal mb-3">All Sales <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
                                 </h4>
                                 <h2 class="mb-5">NGN {{number_format($all_sales), 2}}</h2>
@@ -72,7 +72,7 @@
                         <div class="col-md-4 stretch-card grid-margin">
                             <div class="card bg-gradient-success card-img-holder text-white">
                             <div class="card-body">
-                                <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
+                                <img src="{{url('')}}/public/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
                                 <h4 class="font-weight-normal mb-3"> Transactions Count <i class="mdi mdi-diamond mdi-24px float-right"></i>
                                 </h4>
                                 <h2 class="mb-5">{{$trasaction_count}}</h2>
