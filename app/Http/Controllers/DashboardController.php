@@ -69,6 +69,51 @@ class DashboardController extends Controller
 
 
 
+    public function index(Request $request){
+
+
+        $user_balance = User::where('id', Auth::id())
+        ->first()->main_wallet ?? null;
+
+
+
+        if($user_balance == null){
+            return view('welcome');
+
+        }
+
+
+        $transaction = Transaction::latest()->where('user_id', Auth::id())
+        ->get();
+
+
+        $money_in = Transaction::where('user_id', Auth::id())
+        ->sum('credit');
+
+         $money_out = Transaction::where('user_id', Auth::id())
+        ->sum('debit');
+
+
+        $pos_transaction = Transaction::latest()->where('user_id', Auth::id())
+        ->where('transaction_type', 'CashOut')->paginate(10);
+
+
+        $bill_transaction = Transaction::latest()->where('user_id', Auth::id())
+        ->where('type', 'vas')->paginate(10);
+
+
+        $transfer_transaction = Transaction::latest()->where('user_id', Auth::id())
+        ->where('main_type', 'Transfer')->paginate(10);
+
+
+        return view('transaction', compact('user_balance', 'money_in', 'money_out', 'transaction', 'pos_transaction', 'transfer_transaction', 'bill_transaction'));
+
+      }
+
+
+
+
+
 
 
 

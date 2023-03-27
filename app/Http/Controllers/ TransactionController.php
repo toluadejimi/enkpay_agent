@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Agent;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -9,7 +9,6 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Wallet;
-
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -20,24 +19,11 @@ use Laravel\Passport\Passport;
 use Laravel\Passport\HasApiTokens;
 
 
-class TransactionsController extends Controller
+class TransactionController extends Controller
 {
 
     public $success = true;
     public $failed = false;
-
-    public function cash_out(Request $request){
-
-
-        dd('hello');
-
-
-    }
-
-
-
-
-
 
 
 
