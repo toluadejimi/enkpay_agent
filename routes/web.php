@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Agent\TransactionController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\LoginController;
+
 
 
 
@@ -24,6 +25,9 @@ Route::post('verify-now', [LoginController::class,'pin_verify']);
 
 Route::get('transaction', [DashboardController::class,'index']);
 
+
+
+Route::get('welcome', [AuthenticatedSessionController::class,'login']);
 
 
 
@@ -59,6 +63,12 @@ Route::group(['middleware' => ['auth']], function()
     //banktransfer
     Route::post('bank-transfer-now', [TransactionController::class,'bank_transfer']);
     Route::get('bank-transfer', [TransactionController::class,'bank_transfer_view']);
+    Route::get('transfer-preview', [TransactionController::class,'transfer_preview']);
+    Route::post('pay-now', [TransactionController::class,'pay_now']);
+
+
+
+
 
 
 

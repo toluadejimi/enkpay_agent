@@ -86,11 +86,21 @@
                             </div>
                         </a>
                         <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a class="dropdown-item" href="#">
-                            <i class="mdi mdi-cached me-2 text-success"></i>{{Auth::user()->user_type}} </a>
+
+                            <a class="dropdown-item" href="/transaction">
+                            <i class="mdi mdi-format-list-bulleted me-2 text-primary"></i> Transactions </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/bank-transfer">
+                            <i class="mdi mdi-bank me-2 text-primary"></i> Bank Transfer</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/logout">
                             <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/logout">
+                            <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
+
+
+
                         </div>
                         </li>
 
