@@ -21,7 +21,7 @@
                 style="height: 84px;margin-bottom: 49px;margin-top: -32px;">
 
 
-            <form method="post" action="sign-in" style="margin-bottom: 25px;box-shadow: 1px 4px 20px rgba(0,0,0,0.19);border-radius: 10px;">
+            <form method="post" action="login" style="margin-bottom: 25px;box-shadow: 1px 4px 20px rgba(0,0,0,0.19);border-radius: 10px;">
             @csrf
 
 

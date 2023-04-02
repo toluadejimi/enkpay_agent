@@ -12,7 +12,7 @@ use App\Http\Controllers\LoginController;
 
 
 
-Route::post('sign-in', [LoginController::class,'login_now']);
+Route::post('login', [LoginController::class,'login_now']);
 
 Route::get('login', [AuthenticatedSessionController::class,'login']);
 
