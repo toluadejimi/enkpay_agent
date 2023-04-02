@@ -25,14 +25,9 @@ class LoginController extends Controller
 {
 
 
+public function login_now(Request $request){
 
-public $success = true;
-public $failed = false;
-
-
-
-public function login(Request $request){
-
+    dd($request->all());
 
     try{
 
