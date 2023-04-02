@@ -93,8 +93,8 @@
                             <a class="dropdown-item" href="/bank-transfer">
                             <i class="mdi mdi-bank me-2 text-primary"></i> Bank Transfer</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/logout">
-                            <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
+                            <a class="dropdown-item" href="/profile">
+                            <i class="mdi mdi-logout me-2 text-primary"></i> Profile </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/logout">
                             <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>

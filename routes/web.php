@@ -14,8 +14,7 @@ use App\Http\Controllers\LoginController;
 
 Route::post('sign-in', [LoginController::class,'login']);
 
-
-//Route::get('login', [AuthenticatedSessionController::class,'login']);
+Route::get('login', [AuthenticatedSessionController::class,'login']);
 
 
 Route::get('verify', [LoginController::class,'verify_page']);
@@ -24,6 +23,9 @@ Route::post('verify-now', [LoginController::class,'pin_verify']);
 
 
 Route::get('transaction', [DashboardController::class,'index']);
+
+
+Route::get('welcome', [AuthenticatedSessionController::class,'login']);
 
 
 
