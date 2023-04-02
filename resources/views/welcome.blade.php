@@ -22,8 +22,12 @@
 
 
             <form method="post" action="sign-in"
+            @csrf
+
                 style="margin-bottom: 25px;box-shadow: 1px 4px 20px rgba(0,0,0,0.19);border-radius: 10px;">
-                @csrf
+
+
+
                 <h2 class="visually-hidden">Login Form</h2>
                 @if ($errors->any())
                 <div class="alert alert-danger">
