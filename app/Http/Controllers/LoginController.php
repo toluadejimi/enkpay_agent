@@ -27,7 +27,6 @@ class LoginController extends Controller
 
 public function login_now(Request $request){
 
-    dd($request->all());
 
     try{
 
