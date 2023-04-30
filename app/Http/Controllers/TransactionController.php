@@ -228,4 +228,194 @@ class TransactionController extends Controller
         // }
     }
 
+
+    public function update_bank_info(){
+
+        //$erran_api_key = errand_api_key();
+
+
+
+        $user_balance = User::where('id', Auth::id())
+            ->first()->main_wallet;
+
+        $transaction = Transaction::latest()->where('id', Auth::id())
+            ->paginate(10);
+
+        $bank_name = User::where('id', Auth::id())
+            ->first()->c_bank_name;
+
+        $account_number = User::where('id', Auth::id())
+            ->first()->c_account_number;
+
+        $account_name = User::where('id', Auth::id())
+            ->first()->c_account_name;
+
+        $t_charges = Charge::where('id', 1)
+            ->first()->amount;
+
+
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.errandpay.com/epagentservice/api/v1/ApiGetBanks',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                   // "Authorization: Bearer $errand_key",
+                ),
+            ));
+
+            $var = curl_exec($curl);
+
+            curl_close($curl);
+            $var = json_decode($var);
+
+            $result = $var->data ?? null;
+
+            if ($var->code == null) {
+
+               return back()->with('error', 'Network issue, please try again later');
+
+
+            }
+
+
+            if ($var->code == 200) {
+
+                $banks = $result;
+
+
+            }else{
+                return response()->json([
+
+                    'error' => 'Could not fetch banks'
+
+                ]);
+            }
+
+
+
+        return view('update-bank-info', compact('user_balance', 'transaction', 'bank_name', 'account_number', 'account_name', 't_charges', 'banks'));
+    }
+
+
+    public function verify_info(request $request)
+    {
+
+        try {
+
+
+
+            $user_balance = User::where('id', Auth::id())
+            ->first()->main_wallet;
+
+
+            $bank_data = $request->bank_code;
+            $bank_name = preg_replace('/[0-9]+/', '', $bank_data);
+            $account_number = $request->account_number;
+            $bank_code = preg_replace('~\D~', '', $bank_data);
+
+
+
+
+            $databody = array(
+
+                'accountNumber' => $account_number,
+                'institutionCode' => $bank_code,
+                'channel' => "Bank",
+
+            );
+
+            $body = json_encode($databody);
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://stagingapi.errandpay.com/epagentservice/api/v1/AccountNameVerification',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => $body,
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                ),
+            ));
+
+            $var = curl_exec($curl);
+            curl_close($curl);
+            $var = json_decode($var);
+
+
+            $name = $var->data->name ?? null;
+
+            $status = $var->code ?? null;
+
+            $message = $var->error->message;
+
+
+
+
+            if($status == 200){
+
+
+                return view('update-bank-info-preview', compact('name', 'user_balance', 'bank_code', 'bank_name', 'account_number' ));
+
+
+
+            }else{
+
+                return back('error', "$message");
+
+            }
+
+
+
+
+
+
+
+
+        } catch (\Exception$th) {
+            return $th->getMessage();
+        }
+
+    }
+
+
+
+    public function save_info(request $request){
+
+
+        $pin = $request->pin;
+        $c_bank_name = $request->c_bank_name;
+        $c_bank_code = $request->c_bank_code;
+        $c_account_number = $request->c_account_number;
+        $c_account_name = $request->c_account_name;
+
+        $user_pin = User::where('id', Auth::id())
+        ->first()->pin;
+
+
+        if (Hash::check($pin, $user_pin) == false) {
+
+            return redirect('update-bank')->with('error', 'Invalid Pin');
+        }
+
+
+
+        dd($request->all());
+
+    }
+
+
+
 }

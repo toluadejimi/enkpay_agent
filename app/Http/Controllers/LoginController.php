@@ -107,7 +107,7 @@ public function user_info(request $request){
 
 public function logout(Request $request) {
     Auth::logout();
-    return redirect('/login');
+    return redirect('/welcome');
   }
 
 

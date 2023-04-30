@@ -131,7 +131,7 @@
                                 </div>
 
                                 <div class="col-xs-6">
-                                    <form method="POST" action="/update-bank" class="pt-3">
+                                    <form method="GET" action="#" class="pt-3">
                                         @csrf
                                         <div class="form-group pt-3">
                                             <button type="submit" class="btn btn-gradient-primary me-2">
@@ -141,6 +141,7 @@
                                 </div>
 
                             </div>
+
 
 
 

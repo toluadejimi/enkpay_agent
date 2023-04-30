@@ -16,7 +16,6 @@ Route::post('login', [LoginController::class,'login_now']);
 
 Route::get('login', [AuthenticatedSessionController::class,'login']);
 
-
 Route::get('verify', [LoginController::class,'verify_page']);
 
 Route::post('verify-now', [LoginController::class,'pin_verify']);
@@ -66,7 +65,11 @@ Route::group(['middleware' => ['auth']], function()
     Route::post('pay-now', [TransactionController::class,'pay_now']);
 
 
-
+    //Update Account
+    Route::get('update-bank', [TransactionController::class,'update_bank_info']);
+    Route::post('update-now', [TransactionController::class,'update_now']);
+    Route::post('verify-info', [TransactionController::class,'verify_info']);
+    Route::post( 'save-info', [TransactionController::class,'save_info']);
 
 
 

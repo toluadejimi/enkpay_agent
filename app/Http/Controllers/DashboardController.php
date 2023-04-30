@@ -28,7 +28,7 @@ class DashboardController extends Controller
 
 
         $all_sales= Transaction::where('user_id', Auth::id())
-        ->get()->sum('amount');
+        ->get()->sum('debit');
 
         $trasaction_count = Transaction::select("*")
 
