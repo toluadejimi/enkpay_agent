@@ -18,7 +18,7 @@ class TransactionController extends Controller
         $user_balance = User::where('id', Auth::id())
             ->first()->main_wallet;
 
-        $transaction = Transaction::latest()->where('id', Auth::id())
+        $transactions = Transaction::latest()->where('id', Auth::id())
             ->paginate(10);
 
         $bank_name = User::where('id', Auth::id())
