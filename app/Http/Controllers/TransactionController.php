@@ -172,7 +172,6 @@ class TransactionController extends Controller
 
             $var = json_decode($var);
 
-            dd($var);
 
             $message = "Error from Web Transfer - "." ". $var->error->message ?? null;
 
