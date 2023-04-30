@@ -126,7 +126,7 @@ class TransactionController extends Controller
 
         }
 
-        if ($final_amount > 250000) {
+        if ($final_amount >  250025) {
 
             return back()->with('error', 'Amount can not be more than NGN 250,000.00');
 
