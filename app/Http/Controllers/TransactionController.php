@@ -195,17 +195,20 @@ class TransactionController extends Controller
                 $trasnaction->type = "InterBankTransfer";
                 $trasnaction->main_type = "Transfer";
                 $trasnaction->transaction_type = "BankTransfer";
-                $trasnaction->debit = $final_amount;
+                $trasnaction->debit = $amount_to_send;
                 $trasnaction->note = "Bank Transfer to other banks";
                 $trasnaction->fee = 0;
+                $trasnaction->amount = $final_amount;
                 $trasnaction->e_charges = $transfer_charges;
                 $trasnaction->trx_date = date("Y/m/d");
                 $trasnaction->trx_time = date("h:i:s");
+                $trasnaction->enkPay_Cashout_profit = 15;
                 $trasnaction->receiver_name = $destinationAccountName;
                 $trasnaction->receiver_account_no = $destinationAccountNumber;
                 $trasnaction->balance = $debit;
                 $trasnaction->status = 0;
                 $trasnaction->save();
+                
 
                 return redirect('bank-transfer')->with('message', 'Transaction Successful');
 
