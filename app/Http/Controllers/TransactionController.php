@@ -172,6 +172,8 @@ class TransactionController extends Controller
 
             $var = json_decode($var);
 
+            dd($var);
+
             $message = "Error from Web Transfer - "." ". $var->error->message ?? null;
 
             $trans_id = "ENK-" . random_int(100000, 999999);
@@ -198,7 +200,7 @@ class TransactionController extends Controller
                 $trasnaction->trx_date = date("Y/m/d");
                 $trasnaction->trx_time = date("h:i:s");
                 $trasnaction->receiver_name = $destinationAccountName;
-                $trasnaction->reveiver_account_no = $destinationAccountNumber;
+                $trasnaction->receiver_account_no = $destinationAccountNumber;
                 $trasnaction->balance = $debit;
                 $trasnaction->status = 0;
                 $trasnaction->save();
