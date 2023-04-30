@@ -206,7 +206,7 @@ class TransactionController extends Controller
             $trasnaction->receiver_name = $destinationAccountName;
             $trasnaction->receiver_account_no = $destinationAccountNumber;
             $trasnaction->balance = $debit;
-            $trasnaction->status = 0;
+            $trasnaction->status = 1;
             $trasnaction->save();
 
             $message1 = "NGN $amount_to_send - Just left your VFD Virtual Account";
