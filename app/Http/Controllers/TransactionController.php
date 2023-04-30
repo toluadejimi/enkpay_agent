@@ -34,9 +34,13 @@ class TransactionController extends Controller
             ->first()->amount;
 
         $transaction = Transaction::latest()
-        ->where('id', Auth::id())
-        ->where('transaction_type','InterBankTransfer')
-        ->paginate(10);
+        ->where([
+
+            'id' => Auth::id(),
+            'transaction_type' => 'InterBankTransfer',
+
+
+        ])->paginate(10);
 
         return view('bank-transfer', compact('user_balance', 'transaction', 'bank_name', 'account_number', 'transaction', 'account_name', 't_charges'));
     }
