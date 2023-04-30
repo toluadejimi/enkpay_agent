@@ -71,7 +71,7 @@
                             <div class="form-group">
                                 <label>Enter Amount To Withdraw</label>
                                 <input type="number" name="amount" class="form-control form-control-lg"
-                                    required placeholder="Min NGN 100 | Max 1,000,000.00 " aria-label=" ">
+                                    required placeholder="Min NGN 100 | Max NGN 250,000.00 " aria-label=" ">
                                 <small> Transfer charges  NGN {{$t_charges}}</small>
                             </div>
 

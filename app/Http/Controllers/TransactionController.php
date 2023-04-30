@@ -123,6 +123,14 @@ class TransactionController extends Controller
 
             }
 
+
+
+            if ($final_amount >= 250000) {
+
+                return back()->with('error', 'Amount can not be more than NGN 250,000.00');
+
+            }
+
             //Debit
             $debit = $user_balance - $final_amount;
 
