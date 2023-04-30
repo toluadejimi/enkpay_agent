@@ -172,15 +172,10 @@ class TransactionController extends Controller
 
             $var = json_decode($var);
 
-
             $message = "Error from Web Transfer - "." ". $var->error->message ?? null;
-
             $trans_id = "ENK-" . random_int(100000, 999999);
-
             $TransactionReference = $var->data->reference ?? null;
-
             $status = $var->code ?? null;
-
 
             if ($status == 200) {
 
@@ -204,13 +199,17 @@ class TransactionController extends Controller
                 $trasnaction->status = 0;
                 $trasnaction->save();
 
-
                 return redirect('bank-transfer')->with('message', 'Transaction Successful');
+
+
+                $message1 = "NGN $amount_to_send - Just left your VFD Virtual Account";
+                send_notification($message1);
+
+
 
             } else {
 
                 send_notification($message);
-
                 //credit
                 $credit = $user_balance + $final_amount - $final_amount;
 
