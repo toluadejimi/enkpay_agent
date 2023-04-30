@@ -42,6 +42,7 @@ class TransactionController extends Controller
 
         ])->paginate(10);
 
+
         return view('bank-transfer', compact('user_balance', 'transaction', 'bank_name', 'account_number', 'transaction', 'account_name', 't_charges'));
     }
 
