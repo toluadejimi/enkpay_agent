@@ -61,10 +61,10 @@
                             <div class="card bg-gradient-info card-img-holder text-white">
                             <div class="card-body">
                                 <img src="{{url('')}}/public/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
-                                <h4 class="font-weight-normal mb-3">All Sales <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
+                                <h4 class="font-weight-normal mb-3">Withdrawal<i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
                                 </h4>
                                 <h2 class="mb-5">NGN {{number_format($all_sales), 2}}</h2>
-                                    <div class="column"><h6 class="card-text">Available Balance</h6>
+                                    <div class="column"><h6 class="card-text">Total Withdrawal</h6>
                                 </div>
                             </div>
                             </div>
