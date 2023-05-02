@@ -10,7 +10,7 @@
     <div class="content-wrapper">
 
         <div class="row">
-            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 grid-margin stretch-card">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 grid-margin stretch-card">
                 <div class="card card-statistics">
                     <div class="card-body">
                         <div class="clearfix">
@@ -29,7 +29,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 grid-margin stretch-card">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 grid-margin stretch-card">
                 <div class="card card-statistics">
                     <div class="card-body">
                         <div class="clearfix">
@@ -143,7 +143,7 @@
 
 
             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                
+
                 <div class="row">
                     <div class="col-12 grid-margin">
                         <div class="card">
@@ -206,8 +206,8 @@
 
 
                 </div>
-            
-            
+
+
             </div>
 
 
