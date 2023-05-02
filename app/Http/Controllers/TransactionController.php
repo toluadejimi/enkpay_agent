@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Charge;
+use App\Models\Terminal;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
+
 
 class TransactionController extends Controller
 {
@@ -34,14 +37,12 @@ class TransactionController extends Controller
             ->first()->amount;
 
         $transaction = Transaction::latest()
-        ->where([
+            ->where([
 
-            'id' => Auth::id(),
-            'transaction_type' => 'InterBankTransfer',
+                'id' => Auth::id(),
+                'transaction_type' => 'InterBankTransfer',
 
-
-        ])->paginate(10);
-
+            ])->paginate(10);
 
         return view('bank-transfer', compact('user_balance', 'transaction', 'bank_name', 'account_number', 'transaction', 'account_name', 't_charges'));
     }
@@ -126,7 +127,7 @@ class TransactionController extends Controller
 
         }
 
-        if ($final_amount >  250025) {
+        if ($final_amount > 250025) {
 
             return back()->with('error', 'Amount can not be more than NGN 250,000.00');
 
@@ -384,6 +385,60 @@ class TransactionController extends Controller
         }
 
         dd($request->all());
+
+    }
+
+    public function pos_terminal_view(request $request)
+    {
+
+        $terminal = Terminal::where('user_id', Auth::id())
+            ->get();
+
+        $terminal_count = Terminal::where('user_id', Auth::id())
+            ->count();
+
+        return view('pos-terminal', compact('terminal', 'terminal_count'));
+
+    }
+
+    public function pos_details_view(request $request)
+    {
+
+
+        $money_in = Transaction::where('serial_no', $request->serial_no)
+            ->sum('credit');
+
+        $money_week = Transaction::where('serial_no',  $request->serial_no)
+
+            ->whereBetween('created_at',
+                [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
+            )
+            ->get()->sum('credit');
+
+
+        $transaction = Transaction::latest()->where('serial_no', $request->serial_no)
+        ->paginate('10');
+
+
+        $pos_transaction = Transaction::latest()->where([
+
+            'serial_no' => $request->serial_no,
+            'transaction_type' => 'CashOut'
+
+
+        ])->paginate('10');
+
+
+        $transfer_transaction = Transaction::latest()->where([
+            'serial_no' => $request->serial_no,
+            'transaction_type' => 'VirtualFundWallet'
+        ])->paginate('10');
+
+
+
+
+
+        return view('pos-details', compact('transfer_transaction','money_week', 'pos_transaction', 'transaction', 'money_in'));
 
     }
 

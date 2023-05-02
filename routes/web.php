@@ -72,6 +72,15 @@ Route::group(['middleware' => ['auth']], function()
     Route::post( 'save-info', [TransactionController::class,'save_info']);
 
 
+    //Pos Terminal
+
+    Route::get('pos-terminal', [TransactionController::class,'pos_terminal_view']);
+    Route::get('terminal-view', [TransactionController::class,'pos_details_view']);
+
+
+
+
+
 
 
     //Transaction Table

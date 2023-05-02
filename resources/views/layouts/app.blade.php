@@ -73,7 +73,7 @@
                 </button>
                 <div class="search-field d-none d-md-block">
                     <form class="d-flex align-items-center h-100" action="#">
-                        <h2>NGN {{number_format($user_balance), 2}}</h2>
+                        <h2>NGN {{number_format(Auth::user()->main_wallet), 2}}</h2>
                     </form>
                 </div>
                 <ul class="navbar-nav navbar-nav-right">
@@ -93,6 +93,9 @@
                             <a class="dropdown-item" href="/transaction">
                                 <i class="mdi mdi-format-list-bulleted me-2 text-primary"></i> Transactions </a>
                             <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/pos-terminal">
+                                <i class="mdi mdi-format-list-bulleted me-2 text-primary"></i> My POS Terminal</a>
+                                <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/bank-transfer">
                                 <i class="mdi mdi-bank me-2 text-primary"></i> Bank Transfer</a>
                             <div class="dropdown-divider"></div>
@@ -147,6 +150,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/transaction">
                             <span class="menu-title">Transactions</span>
+                            <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+                        </a>
+                    </li>
+
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pos-terminal">
+                            <span class="menu-title">My POS Terminal</span>
                             <i class="mdi mdi-format-list-bulleted menu-icon"></i>
                         </a>
                     </li>
