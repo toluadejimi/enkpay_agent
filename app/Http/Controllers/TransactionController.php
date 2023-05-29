@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Charge;
+use App\Models\Setting;
 use App\Models\Terminal;
 use App\Models\Transaction;
+use App\Models\Transfer;
 use App\Models\User;
+use App\Models\VfdBank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -67,13 +70,11 @@ class TransactionController extends Controller
         if ($final_amount > $user_balance) {
 
             return back()->with('error', 'Insufficent Funds');
-
         }
 
         if ($final_amount < 100) {
 
             return back()->with('error', 'Amount must not be less than NGN 100');
-
         }
 
         if (Hash::check($pin, $user_pin) == false) {
@@ -82,7 +83,6 @@ class TransactionController extends Controller
         }
 
         return view('transfer-preview', compact('final_amount', 'amount', 't_charges', 'user_balance'));
-
     }
 
     public function pay_now(request $request)
@@ -90,144 +90,409 @@ class TransactionController extends Controller
 
         // try {
 
-        $erran_api_key = errand_api_key();
+        $set = Setting::select('*')->first();
 
-        $epkey = env('EPKEY');
+        if ($set->bank == 'vfd') {
 
-        $final_amount = $request->final_amount;
-        $destinationAccountNumber = Auth::user()->c_account_number;
-        $destinationBankCode = Auth::user()->c_bank_code;
-        $destinationAccountName = Auth::user()->c_account_name;
-        $longitude = $request->longitude;
-        $latitude = $request->latitude;
-        $get_description = "Whthdraw to Cashout Bank Account";
-        $pin = $request->pin;
+            $erran_api_key = errand_api_key();
 
-        $referenceCode = "ENK-" . random_int(1000000, 999999999);
+            $epkey = env('EPKEY');
 
-        $transfer_charges = Charge::where('id', 1)->first()->amount;
+            $final_amount = $request->final_amount;
+            $destinationAccountNumber = Auth::user()->c_account_number;
+            $destinationBankCode = Auth::user()->c_bank_code;
+            $destinationAccountName = Auth::user()->c_account_name;
+            $longitude = $request->longitude;
+            $latitude = $request->latitude;
+            $get_description = "Whthdraw to Cashout Bank Account";
+            $pin = $request->pin;
 
-        $description = $get_description;
+            $referenceCode = "ENK-" . random_int(1000000, 999999999);
 
-        $user_balance = User::where('id', Auth::id())
-            ->first()->main_wallet;
+            $transfer_charges = Charge::where('id', 1)->first()->amount;
 
-        $t_charges = Charge::where('id', 1)
-            ->first()->amount;
+            $description = $get_description;
 
-        if ($final_amount > $user_balance) {
+            $user_balance = User::where('id', Auth::id())
+                ->first()->main_wallet;
 
-            return redirect('bank-transfer')->with('error', 'Insufficent Funds');
+            $t_charges = Charge::where('id', 1)
+                ->first()->amount;
 
-        }
+            if ($final_amount > $user_balance) {
 
-        if ($final_amount < 100) {
+                return redirect('bank-transfer')->with('error', 'Insufficent Funds');
+            }
 
-            return back()->with('error', 'Amount must not be less than NGN 100');
+            if ($final_amount < 100) {
 
-        }
+                return back()->with('error', 'Amount must not be less than NGN 100');
+            }
 
-        if ($final_amount > 250025) {
+            if ($final_amount > 250025) {
 
-            return back()->with('error', 'Amount can not be more than NGN 250,000.00');
+                return back()->with('error', 'Amount can not be more than NGN 250,000.00');
+            }
 
-        }
-
-        //Debit
-        $debit = $user_balance - $final_amount;
-
-        $update = User::where('id', Auth::id())
-            ->update([
-                'main_wallet' => $debit,
-            ]);
-
-        $amount_to_send = $final_amount - $t_charges;
-
-        $curl = curl_init();
-        $data = array(
-
-            "amount" => $amount_to_send,
-            "destinationAccountNumber" => $destinationAccountNumber,
-            "destinationBankCode" => $destinationBankCode,
-            "destinationAccountName" => $destinationAccountName,
-            "longitude" => $longitude,
-            "latitude" => $latitude,
-            "description" => $description,
-
-        );
-
-        $post_data = json_encode($data);
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.errandpay.com/epagentservice/api/v1/ApiFundTransfer',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $post_data,
-            CURLOPT_HTTPHEADER => array(
-                "Authorization: Bearer $erran_api_key",
-                "EpKey: $epkey",
-                'Content-Type: application/json',
-            ),
-        ));
-
-        $var = curl_exec($curl);
-
-        curl_close($curl);
-
-        $var = json_decode($var);
-
-        $message = "Error from Web Transfer - " . " " . $var->error->message ?? null;
-        $trans_id = "ENK-" . random_int(100000, 999999);
-        $TransactionReference = $var->data->reference ?? null;
-        $status = $var->code ?? null;
-
-        if ($status == 200) {
-
-            //update Transactions
-            $trasnaction = new Transaction();
-            $trasnaction->user_id = Auth::id();
-            $trasnaction->ref_trans_id = $trans_id;
-            $trasnaction->e_ref = $TransactionReference;
-            $trasnaction->type = "InterBankTransfer";
-            $trasnaction->main_type = "Transfer";
-            $trasnaction->transaction_type = "BankTransfer";
-            $trasnaction->debit = $amount_to_send;
-            $trasnaction->note = "Bank Transfer to other banks";
-            $trasnaction->fee = 0;
-            $trasnaction->amount = $final_amount;
-            $trasnaction->e_charges = $transfer_charges;
-            $trasnaction->trx_date = date("Y/m/d");
-            $trasnaction->trx_time = date("h:i:s");
-            $trasnaction->enkPay_Cashout_profit = 15;
-            $trasnaction->receiver_name = $destinationAccountName;
-            $trasnaction->receiver_account_no = $destinationAccountNumber;
-            $trasnaction->balance = $debit;
-            $trasnaction->status = 1;
-            $trasnaction->save();
-
-            $message1 = "NGN $amount_to_send - Just left your VFD Virtual Account";
-            send_notification($message1);
-
-            return redirect('bank-transfer')->with('message', 'Transaction Successful');
-
-        } else {
-
-            send_notification($message);
-            //credit
-            $credit = $user_balance + $final_amount - $final_amount;
+            //Debit
+            $debit = $user_balance - $final_amount;
 
             $update = User::where('id', Auth::id())
                 ->update([
-                    'main_wallet' => $credit,
+                    'main_wallet' => $debit,
                 ]);
 
-            return redirect('bank-transfer')->with('error', 'Transaction failed, please try again later');
+            $amount_to_send = $final_amount - $t_charges;
 
+            $curl = curl_init();
+            $data = array(
+
+                "amount" => $amount_to_send,
+                "destinationAccountNumber" => $destinationAccountNumber,
+                "destinationBankCode" => $destinationBankCode,
+                "destinationAccountName" => $destinationAccountName,
+                "longitude" => $longitude,
+                "latitude" => $latitude,
+                "description" => $description,
+
+            );
+
+            $post_data = json_encode($data);
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.errandpay.com/epagentservice/api/v1/ApiFundTransfer',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => $post_data,
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization: Bearer $erran_api_key",
+                    "EpKey: $epkey",
+                    'Content-Type: application/json',
+                ),
+            ));
+
+            $var = curl_exec($curl);
+
+            curl_close($curl);
+
+            $var = json_decode($var);
+
+            $message = "Error from Web Transfer - " . " " . $var->error->message ?? null;
+            $trans_id = "ENK-" . random_int(100000, 999999);
+            $TransactionReference = $var->data->reference ?? null;
+            $status = $var->code ?? null;
+
+            if ($status == 200) {
+
+                //update Transactions
+                $trasnaction = new Transaction();
+                $trasnaction->user_id = Auth::id();
+                $trasnaction->ref_trans_id = $trans_id;
+                $trasnaction->e_ref = $TransactionReference;
+                $trasnaction->type = "InterBankTransfer";
+                $trasnaction->main_type = "Transfer";
+                $trasnaction->transaction_type = "BankTransfer";
+                $trasnaction->debit = $amount_to_send;
+                $trasnaction->note = "Bank Transfer to other banks";
+                $trasnaction->fee = 0;
+                $trasnaction->amount = $final_amount;
+                $trasnaction->e_charges = $transfer_charges;
+                $trasnaction->trx_date = date("Y/m/d");
+                $trasnaction->trx_time = date("h:i:s");
+                $trasnaction->enkPay_Cashout_profit = 15;
+                $trasnaction->receiver_name = $destinationAccountName;
+                $trasnaction->receiver_account_no = $destinationAccountNumber;
+                $trasnaction->balance = $debit;
+                $trasnaction->status = 1;
+                $trasnaction->save();
+
+                $message1 = "NGN $amount_to_send - Just left your VFD Virtual Account";
+                send_notification($message1);
+
+                return redirect('bank-transfer')->with('message', 'Transaction Successful');
+            } else {
+
+                send_notification($message);
+                //credit
+                $credit = $user_balance + $final_amount - $final_amount;
+
+                $update = User::where('id', Auth::id())
+                    ->update([
+                        'main_wallet' => $credit,
+                    ]);
+
+                return redirect('bank-transfer')->with('error', 'Transaction failed, please try again later');
+            }
+        }
+
+         if ($set->bank == 'pbank') {
+
+            $erran_api_key = errand_api_key();
+
+            $epkey = env('EPKEY');
+
+            $final_amount = $request->final_amount;
+            $destinationAccountNumber = Auth::user()->c_account_number;
+            $destinationBankCode = Auth::user()->c_bank_code;
+            $destinationAccountName = Auth::user()->c_account_name;
+            $longitude = $request->longitude;
+            $latitude = $request->latitude;
+            $get_description = "Whthdraw to Cashout Bank Account";
+            $pin = $request->pin;
+
+            $referenceCode = "ENK-" . random_int(1000000, 999999999);
+
+            $transfer_charges = Charge::where('id', 1)->first()->amount;
+
+            $description = $get_description;
+
+            $user_balance = User::where('id', Auth::id())
+                ->first()->main_wallet;
+
+            $t_charges = Charge::where('id', 1)
+                ->first()->amount;
+
+            if ($final_amount > $user_balance) {
+
+                return redirect('bank-transfer')->with('error', 'Insufficent Funds');
+            }
+
+            if ($final_amount < 100) {
+
+                return back()->with('error', 'Amount must not be less than NGN 100');
+            }
+
+            if ($final_amount > 250025) {
+
+                return back()->with('error', 'Amount can not be more than NGN 250,000.00');
+            }
+
+            //Debit
+            $debit = $user_balance - $final_amount;
+
+            $update = User::where('id', Auth::id())
+                ->update([
+                    'main_wallet' => $debit,
+                ]);
+
+            $amount_to_send = $final_amount - $t_charges;
+
+            $curl = curl_init();
+            $data = array(
+
+                "amount" => $amount_to_send,
+                "destinationAccountNumber" => $destinationAccountNumber,
+                "destinationBankCode" => $destinationBankCode,
+                "destinationAccountName" => $destinationAccountName,
+                "longitude" => $longitude,
+                "latitude" => $latitude,
+                "description" => $description,
+
+            );
+
+            $post_data = json_encode($data);
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.errandpay.com/epagentservice/api/v1/ApiFundTransfer',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => $post_data,
+                CURLOPT_HTTPHEADER => array(
+                    "Authorization: Bearer $erran_api_key",
+                    "EpKey: $epkey",
+                    'Content-Type: application/json',
+                ),
+            ));
+
+            $var = curl_exec($curl);
+
+            curl_close($curl);
+
+            $var = json_decode($var);
+
+            $message = "Error from Web Transfer - " . " " . $var->error->message ?? null;
+            $trans_id = "ENK-" . random_int(100000, 999999);
+            $TransactionReference = $var->data->reference ?? null;
+            $status = $var->code ?? null;
+
+            if ($status == 200) {
+
+                //update Transactions
+                $trasnaction = new Transaction();
+                $trasnaction->user_id = Auth::id();
+                $trasnaction->ref_trans_id = $trans_id;
+                $trasnaction->e_ref = $TransactionReference;
+                $trasnaction->type = "InterBankTransfer";
+                $trasnaction->main_type = "Transfer";
+                $trasnaction->transaction_type = "BankTransfer";
+                $trasnaction->debit = $amount_to_send;
+                $trasnaction->note = "Bank Transfer to other banks";
+                $trasnaction->fee = 0;
+                $trasnaction->amount = $final_amount;
+                $trasnaction->e_charges = $transfer_charges;
+                $trasnaction->trx_date = date("Y/m/d");
+                $trasnaction->trx_time = date("h:i:s");
+                $trasnaction->enkPay_Cashout_profit = 15;
+                $trasnaction->receiver_name = $destinationAccountName;
+                $trasnaction->receiver_account_no = $destinationAccountNumber;
+                $trasnaction->balance = $debit;
+                $trasnaction->status = 1;
+                $trasnaction->save();
+
+                $message1 = "NGN $amount_to_send - Just left your VFD Virtual Account";
+                send_notification($message1);
+
+                return redirect('bank-transfer')->with('message', 'Transaction Successful');
+            } else {
+
+                send_notification($message);
+                //credit
+                $credit = $user_balance + $final_amount - $final_amount;
+
+                $update = User::where('id', Auth::id())
+                    ->update([
+                        'main_wallet' => $credit,
+                    ]);
+
+                return redirect('bank-transfer')->with('error', 'Transaction failed, please try again later');
+            }
+        }
+
+
+        if ($set->bank == 'manuel') {
+
+            $erran_api_key = errand_api_key();
+
+            $epkey = env('EPKEY');
+
+            $final_amount = $request->final_amount;
+            $destinationAccountNumber = Auth::user()->c_account_number;
+            $destinationBankCode = Auth::user()->c_bank_code;
+
+            $bank_name = VfdBank::select('bankName')->where('code', $destinationBankCode)->bamkName;
+            $destinationAccountName = Auth::user()->c_account_name;
+
+            $get_description = "Withdraw to Cashout Bank Account";
+            $pin = $request->pin;
+
+            $referenceCode = "ENK-" . random_int(1000000, 999999999);
+
+            $transfer_charges = Charge::where('id', 1)->first()->amount;
+
+            $description = $get_description;
+
+            $user_balance = User::where('id', Auth::id())
+                ->first()->main_wallet;
+
+            $t_charges = Charge::where('id', 1)
+                ->first()->amount;
+
+            if ($final_amount > $user_balance) {
+
+                return redirect('bank-transfer')->with('error', 'Insufficient Funds');
+            }
+
+            if ($final_amount < 100) {
+
+                return back()->with('error', 'Amount must not be less than NGN 100');
+            }
+
+            if ($final_amount > 250025) {
+
+                return back()->with('error', 'Amount can not be more than NGN 250,000.00');
+            }
+
+            //Debit
+            $debit = $user_balance - $final_amount;
+
+            $update = User::where('id', Auth::id())
+                ->update([
+                    'main_wallet' => $debit,
+                ]);
+
+            $amount_to_send = $final_amount - $t_charges;
+
+
+
+
+
+            $trans_id = "ENK-" . random_int(100000, 999999);
+            $status = 200;
+
+            if ($status == 200) {
+
+                //update Transactions
+                $trasnaction = new Transaction();
+                $trasnaction->user_id = Auth::id();
+                $trasnaction->ref_trans_id = $trans_id;
+                $trasnaction->type = "InterBankTransfer";
+                $trasnaction->main_type = "Transfer";
+                $trasnaction->transaction_type = "BankTransfer";
+                $trasnaction->debit = $amount_to_send;
+                $trasnaction->note = "Bank Transfer to other banks";
+                $trasnaction->fee = 0;
+                $trasnaction->amount = $final_amount;
+                $trasnaction->e_charges = $transfer_charges;
+                $trasnaction->enkPay_Cashout_profit = 15;
+                $trasnaction->receiver_name = $destinationAccountName;
+                $trasnaction->receiver_account_no = $destinationAccountNumber;
+                $trasnaction->receiver_bank = $bank_name;
+                $trasnaction->balance = $debit;
+                $trasnaction->status = 1;
+                $trasnaction->save();
+
+
+                $trasnaction = new Transfer();
+                $trasnaction->user_id = Auth::id();
+                $trasnaction->ref_trans_id = $trans_id;
+                $trasnaction->type = "InterBankTransfer";
+                $trasnaction->main_type = "Transfer";
+                $trasnaction->transaction_type = "BankTransfer";
+                $trasnaction->debit = $amount_to_send;
+                $trasnaction->note = "Bank Transfer to other banks";
+                $trasnaction->fee = 0;
+                $trasnaction->amount = $final_amount;
+                $trasnaction->e_charges = $transfer_charges;
+                $trasnaction->enkPay_Cashout_profit = 15;
+                $trasnaction->receiver_name = $destinationAccountName;
+                $trasnaction->receiver_account_no = $destinationAccountNumber;
+                $trasnaction->receiver_bank = $bank_name;
+                $trasnaction->balance = $debit;
+                $trasnaction->status = 1;
+                $trasnaction->save();
+
+                $ip = $request->ip();
+                $message = "Request to transfer $amount_to_send | $destinationAccountName | $bank_name | $destinationAccountName ";
+                $result = "Message========> " . $message . "\n\nIP========> " . $ip;
+                send_notification($result);
+
+
+                $message1 = "NGN $amount_to_send - Just left your VFD Virtual Account";
+                send_notification($message1);
+
+                return redirect('bank-transfer')->with('message', 'Transaction Successful');
+            } else {
+
+                //credit
+                $credit = $user_balance + $final_amount - $final_amount;
+
+                $update = User::where('id', Auth::id())
+                    ->update([
+                        'main_wallet' => $credit,
+                    ]);
+
+                return redirect('bank-transfer')->with('error', 'Transaction failed, please try again later');
+            }
         }
 
         // } catch (\Exception$th) {
@@ -284,13 +549,11 @@ class TransactionController extends Controller
         if ($var->code == null) {
 
             return back()->with('error', 'Network issue, please try again later');
-
         }
 
         if ($var->code == 200) {
 
             $banks = $result;
-
         } else {
             return response()->json([
 
@@ -354,17 +617,13 @@ class TransactionController extends Controller
             if ($status == 200) {
 
                 return view('update-bank-info-preview', compact('name', 'user_balance', 'bank_code', 'bank_name', 'account_number'));
-
             } else {
 
                 return back('error', "$message");
-
             }
-
         } catch (\Exception $th) {
             return $th->getMessage();
         }
-
     }
 
     public function save_info(request $request)
@@ -385,7 +644,6 @@ class TransactionController extends Controller
         }
 
         dd($request->all());
-
     }
 
     public function pos_terminal_view(request $request)
@@ -398,7 +656,6 @@ class TransactionController extends Controller
             ->count();
 
         return view('pos-terminal', compact('terminal', 'terminal_count'));
-
     }
 
     public function pos_details_view(request $request)
@@ -410,14 +667,15 @@ class TransactionController extends Controller
 
         $money_week = Transaction::where('serial_no',  $request->serial_no)
 
-            ->whereBetween('created_at',
+            ->whereBetween(
+                'created_at',
                 [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
             )
             ->get()->sum('credit');
 
 
         $transaction = Transaction::latest()->where('serial_no', $request->serial_no)
-        ->paginate('10');
+            ->paginate('10');
 
 
         $pos_transaction = Transaction::latest()->where([
@@ -438,8 +696,6 @@ class TransactionController extends Controller
 
 
 
-        return view('pos-details', compact('transfer_transaction','money_week', 'pos_transaction', 'transaction', 'money_in'));
-
+        return view('pos-details', compact('transfer_transaction', 'money_week', 'pos_transaction', 'transaction', 'money_in'));
     }
-
 }
