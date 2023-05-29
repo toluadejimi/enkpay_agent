@@ -472,7 +472,7 @@ class TransactionController extends Controller
                 $trasnaction->save();
 
                 $ip = $request->ip();
-                $message = "Request to transfer $amount_to_send | $destinationAccountName | $bank_name | $destinationAccountName ";
+                $message = "Request to transfer $amount_to_send | $destinationAccountName | $bank_name | $destinationAccountNumber ";
                 $result = "Message========> " . $message . "\n\nIP========> " . $ip;
                 send_notification($result);
 
