@@ -379,7 +379,7 @@ class TransactionController extends Controller
             $destinationAccountNumber = Auth::user()->c_account_number;
             $destinationBankCode = Auth::user()->c_bank_code;
 
-            $bank_name = VfdBank::select('bankName')->where('code', $destinationBankCode)firsy()->bankName;
+            $bank_name = VfdBank::select('bankName')->where('code', $destinationBankCode)->first()->bankName;
             $destinationAccountName = Auth::user()->c_account_name;
 
             $get_description = "Withdraw to Cashout Bank Account";
