@@ -81,10 +81,10 @@ class DashboardController extends Controller
 
 
 
-        if($user_balance == null){
-            return view('welcome');
+        // if($user_balance == null){
+        //     return view('welcome');
 
-        }
+        // }
 
 
         $transaction = Transaction::latest()->where('user_id', Auth::id())
