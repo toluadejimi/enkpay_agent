@@ -30,7 +30,7 @@ class DashboardController extends Controller
         $all_sales= Transaction::where('user_id', Auth::id())
         ->get()->sum('debit');
 
-        $trasaction_count = Transaction::select("*")
+        $trasaction_count = Transaction::select("*")->where('user_id', Auth::id())
 
         ->whereBetween('created_at',
 
@@ -40,7 +40,7 @@ class DashboardController extends Controller
 
         ->get()->count();
 
-        $weekly_total = Transaction::select("*")
+        $weekly_total = Transaction::select("*")->where('user_id', Auth::id())
 
         ->whereBetween('created_at',
 
